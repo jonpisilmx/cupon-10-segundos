@@ -27,9 +27,18 @@
       border-radius: 16px;
       max-width: 380px;
       width: 100%;
-      padding: 28px 24px;
+      padding: 24px;
       text-align: center;
       box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      margin-bottom: 20px;
     }
 
     .brand {
@@ -47,19 +56,28 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+
+    .benefit-text {
+      font-size: 0.95rem;
+      color: #1f2937;
+      font-weight: 600;
+      line-height: 1.4;
       margin-bottom: 20px;
+      padding: 0 8px;
     }
 
     .info-box {
       background-color: #faf7f2;
       border: 1px dashed #d1d5db;
       border-radius: 12px;
-      padding: 16px;
-      margin-bottom: 24px;
+      padding: 14px;
+      margin-bottom: 20px;
     }
 
     .info-box p {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       color: #4b5563;
       line-height: 1.4;
     }
@@ -68,17 +86,32 @@
       background-color: #2b2b2b;
       color: #ffffff;
       border: none;
-      padding: 14px 28px;
+      padding: 14px 20px;
       font-size: 1rem;
       font-weight: 600;
       border-radius: 8px;
       cursor: pointer;
       width: 100%;
       transition: background-color 0.2s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
     }
 
     .btn:hover {
       background-color: #404040;
+    }
+
+    .btn-share {
+      background-color: #25D366;
+      color: #ffffff;
+      margin-top: 10px;
+      text-decoration: none;
+    }
+
+    .btn-share:hover {
+      background-color: #1ebc57;
     }
 
     /* Estados del Cupón */
@@ -107,16 +140,33 @@
 <body>
 
   <div class="card">
+    <!-- Imagen del Cupón -->
+    <img 
+      src="https://images.unsplash.com/photo-1624996370220-ff04d51d282d?q=80&w=387&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+      alt="Ícaro Café" 
+      class="card-img"
+    >
+
     <h1 class="brand">Ícaro Café</h1>
     <div class="subtitle">Cupón de Viajero</div>
 
+    <!-- Texto de la Beneficio -->
+    <p class="benefit-text">
+      En Ícaro Café tienes derecho a un café americano gratis en la compra de una pieza de pan o de chilaquiles o toasties.
+    </p>
+
+    <!-- Instrucción de Uso -->
     <div class="info-box">
       <p>Uso único, el cupón tiene una duración de 5 minutos una vez abierto, actívalo para mostrárselo a tu mesero.</p>
     </div>
 
-    <!-- Pantalla Inicial: Botón de Activación -->
+    <!-- Pantalla Inicial: Botón de Activación y Compartir -->
     <div id="sec-inicio">
       <button class="btn" onclick="activarCupon()">Activar Cupón</button>
+      
+      <button class="btn btn-share" onclick="compartirWhatsApp()">
+        <span>Compartir por WhatsApp</span>
+      </button>
     </div>
 
     <!-- Pantalla Activa: Temporizador -->
@@ -143,13 +193,11 @@
       const expiracionGuardada = localStorage.getItem(CLAVE_STORAGE);
 
       if (expiracionGuardada) {
-        // Si ya hay registro previo, evaluar estado inmediatamente
         evaluarEstado(parseInt(expiracionGuardada, 10));
       }
     }
 
     function activarCupon() {
-      // Registrar la hora límite en la memoria del navegador
       const tiempoExpiracion = Date.now() + DURACION_MS;
       localStorage.setItem(CLAVE_STORAGE, tiempoExpiracion);
       evaluarEstado(tiempoExpiracion);
@@ -188,6 +236,13 @@
       document.getElementById('sec-inicio').classList.add('hidden');
       document.getElementById('sec-activo').classList.add('hidden');
       document.getElementById('sec-expirado').classList.remove('hidden');
+    }
+
+    function compartirWhatsApp() {
+      // Toma la URL actual de la página dinámicamente
+      const urlActual = window.location.href;
+      const texto = encodeURIComponent(`¡Obtén un café americano gratis en Ícaro Café! ☕ Accede a tu cupón de viajero aquí: ${urlActual}`);
+      window.open(`https://api.whatsapp.com/send?text=${texto}`, '_blank');
     }
 
     // Ejecutar al cargar la página
